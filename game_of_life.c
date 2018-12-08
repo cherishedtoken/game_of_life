@@ -4,52 +4,55 @@
 #include <unistd.h>
 
 // Total number of rows and columns.
-#define GAMEBOARD_SIZE 20
+#define ROWS 30
+#define COLUMNS 60
 // Return value when a cell lies outside the grid.
 #define OUT_OF_BOUNDS 0
 // If a cell remains the same for STABLE_CYCLES cycles, flip its value.
 #define STABLE_CYCLES 20
 
-int getNorthNeighbor(int** gameboard, int x, int y) {
-    if (y == 0) {
+int getNorthNeighbor(int** gameboard, int row, int column) {
+    if (row == 0) {
         return OUT_OF_BOUNDS;
     } else {
-        return gameboard[x][y - 1];
+        return gameboard[row - 1][column];
     }
 }
 
-int getSouthNeighbor(int** gameboard, int x, int y) {
-    if (y == GAMEBOARD_SIZE - 1) {
+int getSouthNeighbor(int** gameboard, int row, int column) {
+    if (row == ROWS - 1) {
         return OUT_OF_BOUNDS;
     } else {
-        return gameboard[x][y + 1];
+        return gameboard[row + 1][column];
     }
 }
 
-int getWestNeighbor(int** gameboard, int x, int y) {
-    if (x == 0) {
+int getWestNeighbor(int** gameboard, int row, int column) {
+    if (column == 0) {
         return OUT_OF_BOUNDS;
     } else {
-        return gameboard[x - 1][y];
+        return gameboard[row][column - 1];
     }
 }
 
-int getEastNeighbor(int** gameboard, int x, int y) {
-    if (x == GAMEBOARD_SIZE - 1) {
+int getEastNeighbor(int** gameboard, int row, int column) {
+    if (column == COLUMNS - 1) {
         return OUT_OF_BOUNDS;
     } else {
-        return gameboard[x + 1][y];
+        return gameboard[row][column + 1];
     }
 }
 
-int getNeighbors(int** gameboard, int x, int y) {
-    return getNorthNeighbor(gameboard, x, y) + getSouthNeighbor(gameboard, x, y) +
-        getWestNeighbor(gameboard, x, y) + getEastNeighbor(gameboard, x, y);
+int getNeighbors(int** gameboard, int row, int column) {
+    return getNorthNeighbor(gameboard, row, column) +
+        getSouthNeighbor(gameboard, row, column) +
+        getWestNeighbor(gameboard, row, column) +
+        getEastNeighbor(gameboard, row, column);
 }
 
 void print_gameboard(int** gameboard) {
-    for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-        for (int j = 0; j < GAMEBOARD_SIZE; j++) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
             printf("%d ", gameboard[i][j]);
         }
         printf("\n");
@@ -61,11 +64,11 @@ void print_gameboard(int** gameboard) {
 int** create_gameboard() {
     int** gameboard;
 
-    gameboard = malloc(GAMEBOARD_SIZE * sizeof(int*));
+    gameboard = malloc(ROWS * sizeof(int*));
     if (!gameboard) abort();
 
-    for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-        gameboard[i] = malloc(GAMEBOARD_SIZE * sizeof(int));
+    for (int i = 0; i < ROWS; i++) {
+        gameboard[i] = malloc(COLUMNS * sizeof(int));
         if (!gameboard[i]) abort();
     }
 
@@ -76,15 +79,15 @@ void initialize_gameboard(int** gameboard) {
     // Now randomly decide which elements should be given life.
     srand(time(NULL));
 
-    for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-        for (int j = 0; j < GAMEBOARD_SIZE; j++) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
             gameboard[i][j] = rand() % 2;
         }
     }
 }
 
 void free_array(int** gameboard) {
-    for (int i = 0; i < GAMEBOARD_SIZE; i++) {
+    for (int i = 0; i < ROWS; i++) {
         free(gameboard[i]);
     }
     free(gameboard);
@@ -95,8 +98,8 @@ int main() {
     initialize_gameboard(gameboard);
 
     int** gameboard_history = create_gameboard();
-    for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-        for (int j = 0; j < GAMEBOARD_SIZE; j++) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
             gameboard_history[i][j] = 0;
         }
     }
@@ -114,15 +117,15 @@ int main() {
 
     while (1) {
         int** gameboard_copy = create_gameboard();
-        for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-            for (int j = 0; j < GAMEBOARD_SIZE; j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 gameboard_copy[i][j] = gameboard[i][j];
             }
         }
 
 
-        for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-            for (int j = 0; j < GAMEBOARD_SIZE; j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 int neighbors = getNeighbors(gameboard_copy, i, j);
                 if (!gameboard_copy[i][j] && neighbors == 3) {
                     gameboard[i][j] = 1;
@@ -138,8 +141,8 @@ int main() {
 
         // If a particular cell remains the same for n turns, flip its value.
         // This is done to make things more... interesting.
-        for (int i = 0; i < GAMEBOARD_SIZE; i++) {
-            for (int j = 0; j < GAMEBOARD_SIZE; j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 if (gameboard_history[i][j] >= STABLE_CYCLES) {
                     gameboard[i][j] = !gameboard[i][j];
                     gameboard_history[i][j] = 0;
