@@ -9,8 +9,6 @@
 #define COLUMNS 60
 // Return value when a cell lies outside the grid.
 #define OUT_OF_BOUNDS 0
-// If a cell remains the same for STABLE_CYCLES cycles, flip its value.
-#define STABLE_CYCLES 20
 #define GREEN  "\x1B[32m"
 #define RESET "\x1B[0m"
 
@@ -162,19 +160,6 @@ int main() {
                 }
             }
         }
-
-        // If a particular cell remains the same for n turns, flip its value.
-        // This is done to make things more... interesting.
-        /* for (int i = 0; i < ROWS; i++) { */
-        /*     for (int j = 0; j < COLUMNS; j++) { */
-        /*         if (gameboard_history[i][j] >= STABLE_CYCLES) { */
-        /*             gameboard[i][j] = !gameboard[i][j]; */
-        /*             gameboard_history[i][j] = 0; */
-        /*         } else { */
-        /*             gameboard_history[i][j]++; */
-        /*         } */
-        /*     } */
-        /* } */
 
         free_array(gameboard_copy);
         print_gameboard(gameboard);
