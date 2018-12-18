@@ -11,6 +11,8 @@
 #define OUT_OF_BOUNDS 0
 // If a cell remains the same for STABLE_CYCLES cycles, flip its value.
 #define STABLE_CYCLES 20
+#define GREEN  "\x1B[32m"
+#define RESET "\x1B[0m"
 
 int getNorthNeighbor(int** gameboard, int row, int column) {
     return row == 0
@@ -74,7 +76,10 @@ int getNeighbors(int** gameboard, int row, int column) {
 void print_gameboard(int** gameboard) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLUMNS; j++) {
-            printf("%d ", gameboard[i][j]);
+            // Display active cells in green
+            gameboard[i][j] 
+                ? printf("%s%d%s ", GREEN, gameboard[i][j], RESET)
+                : printf("%d ", gameboard[i][j]);
         }
         printf("\n");
     }
