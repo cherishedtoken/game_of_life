@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -43,11 +44,47 @@ int getEastNeighbor(int** gameboard, int row, int column) {
     }
 }
 
+int getNorthwestNeighbor(int** gameboard, int row, int column) {
+    if (row == 0 || column == 0) {
+        return OUT_OF_BOUNDS;
+    } else {
+        return gameboard[row - 1][column - 1];
+    }
+}
+
+int getNortheastNeighbor(int** gameboard, int row, int column) {
+    if (row == 0 || column == COLUMNS - 1) {
+        return OUT_OF_BOUNDS;
+    } else {
+        return gameboard[row - 1][column + 1];
+    }
+}
+
+int getSouthwestNeighbor(int** gameboard, int row, int column) {
+    if (row == ROWS - 1 || column == 0) {
+        return OUT_OF_BOUNDS;
+    } else {
+        return gameboard[row + 1][column - 1];
+    }
+}
+
+int getSoutheastNeighbor(int** gameboard, int row, int column) {
+    if (row == ROWS - 1 || column == COLUMNS - 1) {
+        return OUT_OF_BOUNDS;
+    } else {
+        return gameboard[row + 1][column + 1];
+    }
+}
+
 int getNeighbors(int** gameboard, int row, int column) {
     return getNorthNeighbor(gameboard, row, column) +
         getSouthNeighbor(gameboard, row, column) +
         getWestNeighbor(gameboard, row, column) +
-        getEastNeighbor(gameboard, row, column);
+        getEastNeighbor(gameboard, row, column) +
+        getNorthwestNeighbor(gameboard, row, column) +
+        getNortheastNeighbor(gameboard, row, column) +
+        getSouthwestNeighbor(gameboard, row, column) +
+        getSoutheastNeighbor(gameboard, row, column);
 }
 
 void print_gameboard(int** gameboard) {
@@ -105,7 +142,7 @@ int main() {
     }
 
     /* Here are the rules of the game:
-       1. Any live cell with fewer than two live neighbors dies, as if caused by
+       1. Any live cell with exactly one live neighbor dies, as if caused by
        under-population.
        2. Any live cell with two or three live neighbors lives on to the next
        generation.
@@ -123,34 +160,32 @@ int main() {
             }
         }
 
-
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 int neighbors = getNeighbors(gameboard_copy, i, j);
                 if (!gameboard_copy[i][j] && neighbors == 3) {
                     gameboard[i][j] = 1;
-                } else if (gameboard_copy[i][j]) {
-                    if (neighbors < 2 || neighbors > 3) {
-                        gameboard[i][j] = 0;
-                    } else if (neighbors == 2 || neighbors == 3) {
-                        continue;
-                    }
+                    assert(!gameboard_copy[i][j]);
+                } else if (gameboard_copy[i][j] &&
+                           (neighbors == 1 || neighbors > 3)) {
+                    gameboard[i][j] = 0;
+                    assert(gameboard_copy[i][j]);
                 }
             }
         }
 
         // If a particular cell remains the same for n turns, flip its value.
         // This is done to make things more... interesting.
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
-                if (gameboard_history[i][j] >= STABLE_CYCLES) {
-                    gameboard[i][j] = !gameboard[i][j];
-                    gameboard_history[i][j] = 0;
-                } else {
-                    gameboard_history[i][j]++;
-                }
-            }
-        }
+        /* for (int i = 0; i < ROWS; i++) { */
+        /*     for (int j = 0; j < COLUMNS; j++) { */
+        /*         if (gameboard_history[i][j] >= STABLE_CYCLES) { */
+        /*             gameboard[i][j] = !gameboard[i][j]; */
+        /*             gameboard_history[i][j] = 0; */
+        /*         } else { */
+        /*             gameboard_history[i][j]++; */
+        /*         } */
+        /*     } */
+        /* } */
 
         free_array(gameboard_copy);
         print_gameboard(gameboard);
