@@ -13,67 +13,51 @@
 #define STABLE_CYCLES 20
 
 int getNorthNeighbor(int** gameboard, int row, int column) {
-    if (row == 0) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row - 1][column];
-    }
+    return row == 0
+        ? OUT_OF_BOUNDS
+        : gameboard[row - 1][column];
 }
 
 int getSouthNeighbor(int** gameboard, int row, int column) {
-    if (row == ROWS - 1) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row + 1][column];
-    }
+    return row == ROWS - 1
+        ? OUT_OF_BOUNDS
+        : gameboard[row + 1][column];
 }
 
 int getWestNeighbor(int** gameboard, int row, int column) {
-    if (column == 0) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row][column - 1];
-    }
+    return column == 0
+        ? OUT_OF_BOUNDS
+        : gameboard[row][column - 1];
 }
 
 int getEastNeighbor(int** gameboard, int row, int column) {
-    if (column == COLUMNS - 1) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row][column + 1];
-    }
+    return column == COLUMNS - 1
+        ? OUT_OF_BOUNDS
+        : gameboard[row][column + 1];
 }
 
 int getNorthwestNeighbor(int** gameboard, int row, int column) {
-    if (row == 0 || column == 0) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row - 1][column - 1];
-    }
+    return (row == 0 || column == 0) 
+        ? OUT_OF_BOUNDS
+        : gameboard[row - 1][column - 1];
 }
 
 int getNortheastNeighbor(int** gameboard, int row, int column) {
-    if (row == 0 || column == COLUMNS - 1) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row - 1][column + 1];
-    }
+    return (row == 0 || column == COLUMNS - 1) 
+        ? OUT_OF_BOUNDS
+        : gameboard[row - 1][column + 1];
 }
 
 int getSouthwestNeighbor(int** gameboard, int row, int column) {
-    if (row == ROWS - 1 || column == 0) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row + 1][column - 1];
-    }
+    return (row == ROWS - 1 || column == 0) 
+        ? OUT_OF_BOUNDS
+        : gameboard[row + 1][column - 1];
 }
 
 int getSoutheastNeighbor(int** gameboard, int row, int column) {
-    if (row == ROWS - 1 || column == COLUMNS - 1) {
-        return OUT_OF_BOUNDS;
-    } else {
-        return gameboard[row + 1][column + 1];
-    }
+    return (row == ROWS - 1 || column == COLUMNS - 1) 
+        ? OUT_OF_BOUNDS
+        : gameboard[row + 1][column + 1];
 }
 
 int getNeighbors(int** gameboard, int row, int column) {
